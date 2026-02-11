@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, Table, Button, Modal, Radio, message, Spin, Tag, DatePicker } from 'antd';
+import { Card, Table, Button, Modal, Radio, App, Spin, Tag, DatePicker } from 'antd';
 import { DollarOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { tablesApi } from '@/api/tablesApi';
@@ -12,6 +12,7 @@ import dayjs, { Dayjs } from 'dayjs';
 const { RangePicker } = DatePicker;
 
 export default function CashierPage() {
+  const { message } = App.useApp();
   const queryClient = useQueryClient();
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'CASH' | 'CARD'>('CASH');
@@ -117,6 +118,42 @@ export default function CashierPage() {
       dataIndex: 'tableNumber',
       key: 'tableNumber',
       render: (num: number) => `Table ${num}`,
+    },
+    {
+      title: 'Order IDs',
+      dataIndex: 'orderIds',
+      key: 'orderIds',
+      render: (orderIds: string[]) => (
+        <div>
+          {orderIds && orderIds.length > 0 ? (
+            orderIds.map(id => (
+              <Tag key={id} color="blue" style={{ marginBottom: '4px' }}>
+                #{id.slice(-6)}
+              </Tag>
+            ))
+          ) : (
+            <span style={{ color: '#999' }}>N/A</span>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: 'Bill Items',
+      dataIndex: 'items',
+      key: 'items',
+      render: (items: any[]) => (
+        <div>
+          {items && items.length > 0 ? (
+            items.map((item, index) => (
+              <div key={index} style={{ fontSize: '12px' }}>
+                <strong>{item.qty}x</strong> {item.name} - {formatMoney(item.subtotal)}
+              </div>
+            ))
+          ) : (
+            <span style={{ color: '#999' }}>No items</span>
+          )}
+        </div>
+      ),
     },
     {
       title: 'Amount',

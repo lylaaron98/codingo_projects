@@ -1,4 +1,4 @@
-import { Form, Input, Button, Card, message } from 'antd';
+import { Form, Input, Button, Card, App } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import type { LoginRequest } from '@/api/authApi';
 import type { AuthResponse, Role } from '@/utils/types';
 
 export default function LoginPage() {
+  const { message } = App.useApp();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);

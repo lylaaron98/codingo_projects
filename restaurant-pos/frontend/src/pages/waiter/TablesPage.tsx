@@ -1,29 +1,35 @@
-import { Card, Row, Col, Tag, Spin, message, Button } from 'antd';
+import { Card, Row, Col, Tag, Spin, App, Button } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { tablesApi } from '@/api/tablesApi';
 import { sessionsApi } from '@/api/sessionsApi';
+import { menuApi } from '@/api/menuApi';
 import type { Table } from '@/api/tablesApi';
 
 export default function TablesPage() {
+  const { message } = App.useApp();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data: tables, isLoading } = useQuery({
     queryKey: ['tables'],
     queryFn: tablesApi.getTables,
-    refetchInterval: 3000, // Refresh every 3 seconds
+    refetchInterval: 5000, // Refresh every 5 seconds (reduced from 3)
+    staleTime: 2000, // Consider data fresh for 2 seconds
   });
 
   const openSessionMutation = useMutation({
     mutationFn: (tableId: string) => sessionsApi.openSession({ tableId }),
     onSuccess: async (session) => {
       message.success('Session opened successfully!');
+      // Prefetch menu items before navigation for instant load
+      await queryClient.prefetchQuery({
+        queryKey: ['menu'],
+        queryFn: menuApi.getItems,
+      });
       await queryClient.invalidateQueries({ queryKey: ['tables'] });
-      // Small delay to ensure state updates
-      setTimeout(() => {
-        navigate(`/waiter/order/${session._id}`);
-      }, 300);
+      // Navigate immediately - no delay needed
+      navigate(`/waiter/order/${session._id}`);
     },
     onError: (error: any) => {
       message.error(
@@ -45,11 +51,26 @@ export default function TablesPage() {
     },
   });
 
-  const handleTableClick = (table: Table) => {
+  const handleTableClick = async (table: Table) => {
     if (table.status === 'FREE') {
       openSessionMutation.mutate(table._id);
     } else if (table.currentSessionId) {
+      // Prefetch menu before navigation for occupied tables
+      await queryClient.prefetchQuery({
+        queryKey: ['menu'],
+        queryFn: menuApi.getItems,
+      });
       navigate(`/waiter/order/${table.currentSessionId}`);
+    }
+  };
+
+  const handleTableHover = (table: Table) => {
+    // Prefetch menu on hover for instant load when clicked
+    if (table.status === 'OCCUPIED' && table.currentSessionId) {
+      queryClient.prefetchQuery({
+        queryKey: ['menu'],
+        queryFn: menuApi.getItems,
+      });
     }
   };
 
@@ -75,6 +96,7 @@ export default function TablesPage() {
             <Card
               hoverable
               onClick={() => handleTableClick(table)}
+              onMouseEnter={() => handleTableHover(table)}
               style={{
                 textAlign: 'center',
                 cursor: 'pointer',

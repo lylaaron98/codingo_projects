@@ -2,5 +2,8 @@
   "devDependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1"
+  },
+  "dependencies": {
+    "tsx": "^4.21.0"
   }
 }

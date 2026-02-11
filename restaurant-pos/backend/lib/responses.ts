@@ -10,7 +10,7 @@ export interface ApiError {
  */
 export function setCorsHeaders(res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.setHeader('Access-Control-Max-Age', '86400');
 }
@@ -71,6 +71,13 @@ export function sendUnauthorized(res: VercelResponse, message = 'Unauthorized') 
  */
 export function sendForbidden(res: VercelResponse, message = 'Forbidden') {
   return sendError(res, message, 403, 'FORBIDDEN');
+}
+
+/**
+ * Send conflict error
+ */
+export function sendConflict(res: VercelResponse, message = 'Conflict') {
+  return sendError(res, message, 409, 'CONFLICT');
 }
 
 /**

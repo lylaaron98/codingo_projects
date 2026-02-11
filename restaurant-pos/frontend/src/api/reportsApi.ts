@@ -14,12 +14,31 @@ export interface TopItem {
   totalRevenue: number;
 }
 
+export interface CompletedOrderItem {
+  name: string;
+  price: number;
+  qty: number;
+  subtotal: number;
+  notes?: string;
+}
+
+export interface CompletedOrder {
+  sessionId: string;
+  tableNumber: number | string;
+  items: CompletedOrderItem[];
+  totalAmount: number;
+  paymentMethod: 'CASH' | 'CARD';
+  openedAt: string;
+  closedAt: string;
+  paidAt: string;
+}
+
 export const reportsApi = {
   getDailyReport: async (date: string): Promise<DailyReport> => {
-    const response = await http.get<DailyReport>(`/reports/daily`, {
+    const response = await http.get<{ report: DailyReport }>(`/reports/daily`, {
       params: { date },
     });
-    return response.data;
+    return response.data.report;
   },
 
   getTopItems: async (from: string, to: string): Promise<TopItem[]> => {
@@ -27,5 +46,12 @@ export const reportsApi = {
       params: { from, to },
     });
     return response.data.items;
+  },
+
+  getCompletedOrders: async (startDate: string, endDate: string): Promise<CompletedOrder[]> => {
+    const response = await http.get<{ orders: CompletedOrder[] }>(`/reports/completed-orders`, {
+      params: { startDate, endDate },
+    });
+    return response.data.orders;
   },
 };

@@ -7,6 +7,7 @@ import KitchenPage from '@/pages/kitchen/KitchenPage';
 import CashierPage from '@/pages/cashier/CashierPage';
 import ManagerMenuPage from '@/pages/manager/MenuPage';
 import ManagerReportsPage from '@/pages/manager/ReportsPage';
+import ManagerUsersPage from '@/pages/manager/UsersPage';
 
 export default function AppRoutes() {
   return (
@@ -73,6 +74,14 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['MANAGER']}>
             <ManagerReportsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/manager/users"
+        element={
+          <ProtectedRoute allowedRoles={['MANAGER']}>
+            <ManagerUsersPage />
           </ProtectedRoute>
         }
       />

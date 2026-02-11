@@ -1,5 +1,12 @@
 import http from './http';
 
+export interface BillItem {
+  name: string;
+  price: number;
+  qty: number;
+  subtotal: number;
+}
+
 export interface PaymentHistoryItem {
   _id: string;
   tableNumber: number;
@@ -9,6 +16,8 @@ export interface PaymentHistoryItem {
   sessionId: string;
   openedAt: string;
   closedAt: string;
+  orderIds: string[];
+  items: BillItem[];
 }
 
 export interface PaymentHistoryResponse {

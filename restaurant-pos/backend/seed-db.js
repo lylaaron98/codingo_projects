@@ -17,20 +17,23 @@ fetch('http://localhost:3000/api/auth/seed', {
   .then((data) => {
     console.log('✅ Database seeded successfully!\n');
     console.log('Created:');
-    console.log(`  - ${data.data.users.length} users`);
-    console.log(`  - ${data.data.tablesCount} tables`);
-    console.log(`  - ${data.data.menuItemsCount} menu items\n`);
-    console.log('📝 Login credentials (password: password123):');
-    data.data.users.forEach(u => {
-      console.log(`   ${u.username.padEnd(8)} → ${u.role}`);
-    });
-    console.log('\n🚀 Ready to test at http://localhost:5176');
+    console.log(`  - ${data.data.users} users (waiter, kitchen, cashier, manager)`);
+    console.log(`  - ${data.data.tables} tables (numbered 1-10)`);
+    console.log(`  - ${data.data.menuItems} menu items (across 5 categories)\n`);
+    console.log('📝 Login credentials:');
+    console.log('   Username → Password → Role');
+    console.log('   waiter   → password123 → WAITER');
+    console.log('   kitchen  → password123 → KITCHEN');
+    console.log('   cashier  → password123 → CASHIER');
+    console.log('   manager  → password123 → MANAGER');
+    console.log('\n🚀 Ready to test at http://localhost:5173 (frontend)');
+    console.log('   Backend running at http://localhost:3000');
     process.exit(0);
   })
   .catch((error) => {
     console.error('\n❌ Seed failed:', error.message);
     console.error('\nMake sure:');
-    console.error('  1. Vercel dev server is running (npx vercel dev)');
+    console.error('  1. Backend server is running (npm run dev in backend folder)');
     console.error('  2. MongoDB connection string is correct in .env');
     process.exit(1);
   });

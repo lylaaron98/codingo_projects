@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node dev-server.js",
+    "dev": "npm run dev --prefix backend",
+    "start": "npm start --prefix backend",
     "frontend": "npm run dev --prefix frontend",
+    "seed": "npm run seed --prefix backend",
     "test": "vitest"
   },
   "devDependencies": {

@@ -8,7 +8,7 @@ import {
   Input,
   InputNumber,
   Switch,
-  message,
+  App,
   Space,
   Popconfirm,
   Tag,
@@ -24,6 +24,7 @@ import {
 import { formatMoney } from '@/utils/money';
 
 export default function MenuPage() {
+  const { message } = App.useApp();
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   const [isModalVisible, setIsModalVisible] = useState(false);

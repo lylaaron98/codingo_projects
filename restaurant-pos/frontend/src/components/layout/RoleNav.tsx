@@ -6,6 +6,7 @@ import {
   DollarOutlined,
   AppstoreOutlined,
   BarChartOutlined,
+  TeamOutlined,
 } from '@ant-design/icons';
 import type { Role } from '@/utils/types';
 
@@ -49,6 +50,11 @@ export default function RoleNav({ role }: RoleNavProps) {
         key: '/manager/reports',
         label: 'Reports',
         icon: <BarChartOutlined />,
+      },
+      {
+        key: '/manager/users',
+        label: 'Users',
+        icon: <TeamOutlined />,
       },
     ],
   };

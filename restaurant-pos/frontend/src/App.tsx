@@ -1,4 +1,5 @@
 import { useLocation } from 'react-router-dom';
+import { App as AntdApp } from 'antd';
 import AppShell from './components/layout/AppShell';
 import AppRoutes from './routes';
 import './App.css';
@@ -9,13 +10,19 @@ function App() {
 
   // Don't show AppShell on login page
   if (isLoginPage) {
-    return <AppRoutes />;
+    return (
+      <AntdApp>
+        <AppRoutes />
+      </AntdApp>
+    );
   }
 
   return (
-    <AppShell>
-      <AppRoutes />
-    </AppShell>
+    <AntdApp>
+      <AppShell>
+        <AppRoutes />
+      </AppShell>
+    </AntdApp>
   );
 }
 

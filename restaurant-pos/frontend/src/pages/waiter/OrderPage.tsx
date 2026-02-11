@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -8,7 +8,7 @@ import {
   Button,
   Table,
   InputNumber,
-  message,
+  App,
   Spin,
   Tag,
   Space,
@@ -29,6 +29,7 @@ import { formatMoney } from '@/utils/money';
 const { Search } = Input;
 
 export default function OrderPage() {
+  const { message } = App.useApp();
   const { sessionId } = useParams<{ sessionId: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -39,6 +40,7 @@ export default function OrderPage() {
   const { data: menuItems, isLoading } = useQuery({
     queryKey: ['menu'],
     queryFn: menuApi.getItems,
+    staleTime: 10 * 60 * 1000, // Menu rarely changes, keep for 10 minutes
   });
 
   const createOrderMutation = useMutation({
@@ -81,11 +83,14 @@ export default function OrderPage() {
     createOrderMutation.mutate();
   };
 
-  const filteredMenu = menuItems?.filter(
-    (item: MenuItem) =>
-      item.isAvailable &&
-      item.name.toLowerCase().includes(searchText.toLowerCase())
-  );
+  // Memoize filtered menu to prevent recalculating on every render
+  const filteredMenu = useMemo(() => {
+    return menuItems?.filter(
+      (item: MenuItem) =>
+        item.isAvailable &&
+        item.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }, [menuItems, searchText]);
 
   const cartColumns = [
     {
