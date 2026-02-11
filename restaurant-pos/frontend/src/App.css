@@ -1,0 +1,11 @@
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-content {
+  background: #fff;
+  padding: 24px;
+  min-height: 280px;
+}
