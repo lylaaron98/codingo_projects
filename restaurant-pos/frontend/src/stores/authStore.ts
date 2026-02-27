@@ -6,9 +6,14 @@ interface AuthState {
   token: string | null;
   user: User | null;
   isAuthenticated: boolean;
+  _hasHydrated: boolean;
+  _version: number; // Version for store migration
+  setHasHydrated: (state: boolean) => void;
   login: (token: string, username: string, role: Role) => void;
   logout: () => void;
 }
+
+const STORE_VERSION = 1; // Increment this when store structure changes
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -16,6 +21,11 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       user: null,
       isAuthenticated: false,
+      _hasHydrated: false,
+      _version: STORE_VERSION,
+      setHasHydrated: (state: boolean) => {
+        set({ _hasHydrated: state });
+      },
       login: (token: string, username: string, role: Role) => {
         localStorage.setItem('auth_token', token);
         set({
@@ -35,6 +45,23 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
+      version: STORE_VERSION,
+      migrate: (persistedState: any, version: number) => {
+        // Clear old incompatible state
+        if (version !== STORE_VERSION || !persistedState._hasHydrated) {
+          return {
+            token: null,
+            user: null,
+            isAuthenticated: false,
+            _hasHydrated: false,
+            _version: STORE_VERSION,
+          };
+        }
+        return persistedState;
+      },
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

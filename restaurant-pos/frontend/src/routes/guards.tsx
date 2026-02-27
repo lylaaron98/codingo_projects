@@ -8,8 +8,13 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, _hasHydrated } = useAuthStore();
   const location = useLocation();
+
+  // Wait for store to hydrate before making routing decisions
+  if (!_hasHydrated) {
+    return null; // Or a loading spinner
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
@@ -30,7 +35,12 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
 }
 
 export function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, _hasHydrated } = useAuthStore();
+
+  // Wait for store to hydrate before making routing decisions
+  if (!_hasHydrated) {
+    return null; // Or a loading spinner
+  }
 
   if (isAuthenticated && user) {
     // Redirect to role's home page
