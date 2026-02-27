@@ -164,6 +164,8 @@ VITE_API_URL=https://your-app.vercel.app/api
 
 ## Installation
 
+> 📋 **New to the project?** Check out [SETUP.md](SETUP.md) for detailed step-by-step instructions with troubleshooting tips!
+
 ### Prerequisites
 - **Node.js** 18+ ([Download](https://nodejs.org/))
 - **MongoDB Atlas** account ([Sign up free](https://www.mongodb.com/cloud/atlas))
@@ -311,7 +313,8 @@ The seed script creates 3 active sessions with orders for testing:
 
 ### Complete Order Flow
 
-1. **Waiter - Open Tab / `waiter123`
+1. **Waiter - Open Table Session**
+   - Login as `waiter` / `waiter123`
    - Click "Open Session" on a free table
    - Navigate to Orders page
    - Add items to cart
@@ -336,10 +339,14 @@ The seed script creates 3 active sessions with orders for testing:
    - View daily revenue dashboard with statistics
    - Analyze top-selling items by category
    - Review completed orders with filtering
-   - Manage menu items (add/edit/delete) items
-   - Manage menu items
+   - Manage menu items (add/edit/delete)
 
-## API Endpointswaiter123" }
+## API Endpoints
+
+### Authentication
+```
+POST /api/auth/login
+Request: { "username": "waiter", "password": "waiter123" }
 Response: { "token": "jwt...", "user": { "username": "waiter", "role": "WAITER" } }
 ```
 
@@ -508,16 +515,23 @@ Uses `tsx` to run TypeScript files directly in production.
 - Auto-refresh on all data-heavy pages
 - 54 passing unit tests (36 backend + 18 frontend)
 - Database seeding with test data
+### Page constantly switching between routes (redirect loop)
+- **Cause**: Old cached authentication data in localStorage (usually after code updates)
+- **Solution**: Hard refresh the browser with `Ctrl + Shift + R` (Windows/Linux) or `Cmd + Shift + R` (Mac)
+- **Alternative**: Open DevTools (F12) → Application → Local Storage → Right-click → Clear
+- **Note**: Works in incognito mode but not regular browser = cached data issue
+- The app now auto-migrates old data, but manual cache clear may be needed once
+
 ### Changes not reflecting
 - **Hard refresh browser**: Press `Ctrl + Shift + R` (Windows) or `Cmd + Shift + R` (Mac)
-- **Restart backend**: `cd backend && npm run dev`
-- **Clear localStorage**: Open DevTools → Application → Local Storage → Clear All
+- **Restart frontend**: Stop the Vite server (Ctrl+C) and run `npm run dev` again
+- **Restart backend**: Stop the server (Ctrl+C) in backend terminal and run `npm run dev` again
+- **Clear browser cache**: Open DevTools → Application → Local Storage → Clear All
 
 ### Tests failing
-- **MongoDB Memory Server**: First run may take time to download
-- **Port conflicts**: Stop other Node processes using `npm test`
-- **Cache issues**: Delete `node_modules` and run `npm install` again
-- **Clear localStorage**: Open DevTools → Application → Local Storage → Clear All
+- **MongoDB Memory Server**: First run may take time to download binary
+- **Port conflicts**: Stop other Node processes or change ports in config
+- **Cache issues**: Delete `node_modules` and `package-lock.json`, then run `npm install` again
 
 ## Building for Production
 
