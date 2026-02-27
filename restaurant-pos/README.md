@@ -300,10 +300,10 @@ The seed script creates 3 active sessions with orders for testing:
 
 | Username | Password | Role | Access |
 |----------|----------|------|--------|
-| `waiter` | `password123` | WAITER | Tables, Orders |
-| `kitchen` | `password123` | KITCHEN | Kitchen Queue |
-| `cashier` | `password123` | CASHIER | Payments, History |
-| `manager` | `password123` | MANAGER | Menu, Reports |
+| `waiter` | `waiter123` | WAITER | Tables, Orders |
+| `kitchen` | `kitchen123` | KITCHEN | Kitchen Queue |
+| `cashier` | `cashier123` | CASHIER | Payments, History |
+| `manager` | `manager123` | MANAGER | Menu, Reports |
 
 ⚠️ **Security Note**: Change these passwords before deploying to production!
 
